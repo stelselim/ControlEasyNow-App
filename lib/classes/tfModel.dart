@@ -29,14 +29,25 @@ class TFModel {
 
   String get toDen {
     String toDen = "";
-    for (var e in numeratorCoeffs) {
+    for (var e in denominatorCoeffs) {
       // If last, no need to put comma
-      if (e == numeratorCoeffs.last) {
+      if (e == denominatorCoeffs.last) {
         toDen = toDen + "$e";
       } else {
         toDen = toDen + "$e,";
       }
     }
     return toDen;
+  }
+
+  bool get isProper {
+    // Proper Check For Transfer Function
+    if (denominatorCoeffs.length > 1 &&
+        numeratorCoeffs.length != 0 &&
+        numeratorCoeffs.length <= denominatorCoeffs.length) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
