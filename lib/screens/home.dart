@@ -21,7 +21,7 @@ class _MyHomePageState extends State<Home> {
     var y = res['y'];
     List<FlSpot> dat = [];
     for (int i = 0; i < x.length; i += 1) {
-      dat.add(FlSpot(x.elementAt(i), (y.elementAt(i) * 5000).round() / 5000));
+      dat.add(FlSpot(x.elementAt(i), (y.elementAt(i) * 10000).round() / 10000));
     }
     return dat;
   }

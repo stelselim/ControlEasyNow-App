@@ -1,4 +1,5 @@
 import 'package:controlapp/screens/home.dart';
+import 'package:controlapp/screens/system.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,9 +15,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/",
+      initialRoute: "/system",
       routes: {
         '/': (context) => Home(title: 'Flutter Demo Home Page'),
+        '/system': (context) => System(),
       },
     );
   }
