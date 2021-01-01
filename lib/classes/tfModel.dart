@@ -16,11 +16,13 @@ class TFModel {
 
   String get toNum {
     String toNum = "";
-    for (var e in numeratorCoeffs) {
+    for (int i = 0; i < numeratorCoeffs.length; i++) {
       // If last, no need to put comma
-      if (e == numeratorCoeffs.last) {
+      if (i == numeratorCoeffs.length - 1) {
+        var e = numeratorCoeffs.elementAt(i);
         toNum = toNum + "$e";
       } else {
+        var e = numeratorCoeffs.elementAt(i);
         toNum = toNum + "$e,";
       }
     }
@@ -29,11 +31,13 @@ class TFModel {
 
   String get toDen {
     String toDen = "";
-    for (var e in denominatorCoeffs) {
+    for (int i = 0; i < denominatorCoeffs.length; i++) {
       // If last, no need to put comma
-      if (e == denominatorCoeffs.last) {
+      if (i == denominatorCoeffs.length - 1) {
+        var e = denominatorCoeffs.elementAt(i);
         toDen = toDen + "$e";
       } else {
+        var e = denominatorCoeffs.elementAt(i);
         toDen = toDen + "$e,";
       }
     }
@@ -49,5 +53,13 @@ class TFModel {
     } else {
       return false;
     }
+  }
+
+  void clear() {
+    numeratorText = "";
+    denominatorText = "";
+
+    numeratorCoeffs = [];
+    denominatorCoeffs = [];
   }
 }

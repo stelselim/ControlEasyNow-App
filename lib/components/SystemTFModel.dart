@@ -1,11 +1,11 @@
 import 'package:controlapp/classes/tfModel.dart';
 import 'package:flutter/material.dart';
 
-class SystemTfModel extends StatelessWidget {
+class SystemTFComponent extends StatelessWidget {
   // System in Transfer Function Model
   final TFModel system;
 
-  const SystemTfModel({
+  const SystemTFComponent({
     Key key,
     @required this.system,
   }) : super(key: key);
@@ -18,14 +18,24 @@ class SystemTfModel extends StatelessWidget {
           Container(
             child: Text(
               system.numeratorText,
-              textScaleFactor: 2,
+              style: TextStyle(
+                fontSize: 22,
+              ),
             ),
           ),
-          Divider(),
+          !(system.numeratorText != "" || system.denominatorText != "")
+              ? Container()
+              : Divider(
+                  endIndent: MediaQuery.of(context).size.width / 9,
+                  indent: MediaQuery.of(context).size.width / 9,
+                  color: Colors.black,
+                ),
           Container(
             child: Text(
               system.denominatorText,
-              textScaleFactor: 2,
+              style: TextStyle(
+                fontSize: 22,
+              ),
             ),
           )
         ],

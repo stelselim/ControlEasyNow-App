@@ -1,7 +1,9 @@
 import 'dart:convert';
-
 import 'package:controlapp/classes/tfModel.dart';
 import 'package:controlapp/components/SystemTFModel.dart';
+import 'package:controlapp/control/request/rampresponse.dart';
+import 'package:controlapp/control/request/stepinfo.dart';
+import 'package:controlapp/control/request/stepresponse.dart';
 import 'package:controlapp/utility/makeSFunction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,14 +32,39 @@ class _SystemState extends State<System> {
       ),
       body: Container(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
           child: Column(
             children: [
+              !(system.numeratorText != "" || system.denominatorText != "")
+                  ? Container()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FlatButton(
+                          child: Text(
+                            "Clear",
+                            style: ThemeData.light().textTheme.headline1,
+                            textScaleFactor: 1.5,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              numeratorController.clear();
+                              denominatorController.clear();
+                              system.clear();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+              SizedBox(
+                height: 15,
+              ),
               Card(
                 margin: EdgeInsets.all(10),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.75,
-                  padding: const EdgeInsets.all(8.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
                   child: TextField(
                     keyboardType: TextInputType.number,
                     controller: numeratorController,
@@ -57,7 +84,8 @@ class _SystemState extends State<System> {
                 margin: EdgeInsets.all(10),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.75,
-                  padding: const EdgeInsets.all(8.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
                   child: TextField(
                     keyboardType: TextInputType.number,
                     controller: denominatorController,
@@ -76,7 +104,7 @@ class _SystemState extends State<System> {
               SizedBox(
                 height: 50,
               ),
-              SystemTfModel(
+              SystemTFComponent(
                 system: system,
               ),
               SizedBox(
@@ -84,65 +112,87 @@ class _SystemState extends State<System> {
               ),
               !system.isProper
                   ? Container()
-                  : Container(
-                      height: 450,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          RaisedButton(
-                            child: Text("Step Info"),
-                            onPressed: () async {
-                              try {
-                                String numParams = system.toNum;
-                                String denParams = system.toDen;
-                                print(numParams);
-                                print(denParams);
-                                var url =
-                                    "https://controlalgo.ey.r.appspot.com/stepinfo?num=$numParams&den=$denParams";
-                                print(url);
-                                var res = await http.get(url, headers: {
-                                  "Accept": "application/json",
-                                  "Access-Control-Allow-Origin": "*"
-                                });
-
-                                print(jsonDecode(res.body));
-                              } catch (e) {
-                                print(e);
-                              }
-                            },
-                          ),
-                          RaisedButton(
-                            child: Text("Step Response"),
-                            onPressed: () async {
-                              try {} catch (e) {}
-                            },
-                          ),
-                          RaisedButton(
-                            child: Text("Ramp Response"),
-                            onPressed: () {},
-                          ),
-                          RaisedButton(
-                            child: Text("Impulse Response"),
-                            onPressed: () {},
-                          ),
-                          RaisedButton(
-                            child: Text("BodePlot"),
-                            onPressed: () {},
-                          ),
-                          RaisedButton(
-                            child: Text("RootLocus"),
-                            onPressed: () {},
-                          ),
-                          RaisedButton(
-                            child: Text("Nyquist"),
-                            onPressed: () {},
-                          ),
-                          RaisedButton(
-                            child: Text("Poles Zeros"),
-                            onPressed: () {},
-                          ),
-                        ],
+                  : GridView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(bottom: 25),
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 15,
                       ),
+                      children: [
+                        RaisedButton(
+                          child: Text(
+                            "Step Info",
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () async {
+                            try {
+                              var res = await stepinfo(system);
+                              print(res);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text("Step Response"),
+                          onPressed: () async {
+                            try {
+                              var res = await stepresponse(system);
+                              print(res);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text("Ramp Response"),
+                          onPressed: () async {
+                            try {
+                              var res = await rampresponse(system);
+                              print(res);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text("Impulse Response"),
+                          onPressed: () async {
+                            try {
+                              var res = await rampresponse(system);
+                              print(res);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text("BodePlot"),
+                          onPressed: () {},
+                        ),
+                        RaisedButton(
+                          child: Text("RootLocus"),
+                          onPressed: () {},
+                        ),
+                        RaisedButton(
+                          child: Text("Nyquist"),
+                          onPressed: () {},
+                        ),
+                        RaisedButton(
+                          child: Text(
+                            "Poles Zeros",
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {},
+                        ),
+                        RaisedButton(
+                          child: Text("Closed Loop"),
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
             ],
           ),

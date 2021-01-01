@@ -17,7 +17,7 @@ class App extends StatelessWidget {
       ),
       initialRoute: "/system",
       routes: {
-        '/': (context) => Home(title: 'Flutter Demo Home Page'),
+        '/': (context) => Home(),
         '/system': (context) => System(),
       },
     );
