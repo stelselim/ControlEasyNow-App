@@ -1,4 +1,4 @@
-import 'package:controlapp/classes/tfModel.dart';
+import 'package:controlapp/classes/systemTF.dart';
 import 'package:flutter/material.dart';
 
 class SystemTFComponent extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:controlapp/classes/tfModel.dart';
+import 'package:controlapp/classes/systemTF.dart';
 
 Future<StepInfo> stepinfo(TFModel tfModel) async {
   String numParams = tfModel.toNum;
   String denParams = tfModel.toDen;
-  print(numParams);
-  print(denParams);
+  // print(numParams);
+  // print(denParams);
 
   var url =
       "https://controlalgo.ey.r.appspot.com/stepinfo?num=$numParams&den=$denParams";

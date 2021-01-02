@@ -1,7 +1,13 @@
 import 'dart:convert';
-import 'package:controlapp/classes/tfModel.dart';
-import 'package:controlapp/components/SystemTFModel.dart';
+import 'package:controlapp/classes/systemTF.dart';
+import 'package:controlapp/components/SystemTFComponent.dart';
+import 'package:controlapp/control/request/bodeplot.dart';
+import 'package:controlapp/control/request/closedloopUnitFeedback.dart';
+import 'package:controlapp/control/request/impulseresponse.dart';
+import 'package:controlapp/control/request/nyquistplot.dart';
+import 'package:controlapp/control/request/polesZeros.dart';
 import 'package:controlapp/control/request/rampresponse.dart';
+import 'package:controlapp/control/request/rlocusplot.dart';
 import 'package:controlapp/control/request/stepinfo.dart';
 import 'package:controlapp/control/request/stepresponse.dart';
 import 'package:controlapp/utility/makeSFunction.dart';
@@ -162,7 +168,7 @@ class _SystemState extends State<System> {
                           child: Text("Impulse Response"),
                           onPressed: () async {
                             try {
-                              var res = await rampresponse(system);
+                              var res = await impulseresponse(system);
                               print(res);
                             } catch (e) {
                               print(e);
@@ -171,26 +177,64 @@ class _SystemState extends State<System> {
                         ),
                         RaisedButton(
                           child: Text("BodePlot"),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              var res = await bodeplot(system);
+                              print(res);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
                         ),
                         RaisedButton(
                           child: Text("RootLocus"),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              var res = await rlocusplot(system);
+                              print(res.points.toString());
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
                         ),
                         RaisedButton(
                           child: Text("Nyquist"),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              var res = await nyquistplot(system);
+                              print(res.freq);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
                         ),
                         RaisedButton(
                           child: Text(
                             "Poles Zeros",
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              var res = await poleszeros(system);
+                              print(res.zeros.toString());
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
                         ),
                         RaisedButton(
                           child: Text("Closed Loop"),
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              var res = await closedloopUnitFeedback(system);
+                              print(res.numeratorCoeffs);
+                              print(res.denominatorCoeffs);
+                              print(res.numeratorText);
+                              print(res.denominatorText);
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
                         ),
                       ],
                     ),
