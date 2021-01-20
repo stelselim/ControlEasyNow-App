@@ -15,6 +15,7 @@ class SystemTFComponent extends StatelessWidget {
     return Container(
       child: Column(
         children: [
+          // Numerator
           Container(
             child: Text(
               system.numeratorText,
@@ -23,6 +24,8 @@ class SystemTFComponent extends StatelessWidget {
               ),
             ),
           ),
+
+          // Divider
           !(system.numeratorText != "" || system.denominatorText != "")
               ? Container()
               : Divider(
@@ -30,6 +33,8 @@ class SystemTFComponent extends StatelessWidget {
                   indent: MediaQuery.of(context).size.width / 9,
                   color: Colors.black,
                 ),
+
+          // Denominator
           Container(
             child: Text(
               system.denominatorText,

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:controlapp/classes/systemTF.dart';
 import 'package:controlapp/components/SystemTFComponent.dart';
 import 'package:controlapp/control/request/bodeplot.dart';
@@ -10,10 +9,13 @@ import 'package:controlapp/control/request/rampresponse.dart';
 import 'package:controlapp/control/request/rlocusplot.dart';
 import 'package:controlapp/control/request/stepinfo.dart';
 import 'package:controlapp/control/request/stepresponse.dart';
+import 'package:controlapp/provider/appstate.dart';
+import 'package:controlapp/screens/analysis.dart';
 import 'package:controlapp/utility/makeSFunction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
 
 class System extends StatefulWidget {
   @override
@@ -41,6 +43,7 @@ class _SystemState extends State<System> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
           child: Column(
             children: [
+              // Clear Transfer Function Button
               !(system.numeratorText != "" || system.denominatorText != "")
                   ? Container()
                   : Row(
@@ -62,9 +65,12 @@ class _SystemState extends State<System> {
                         ),
                       ],
                     ),
+
+              // Space
               SizedBox(
                 height: 15,
               ),
+              // Numerator Textfield
               Card(
                 margin: EdgeInsets.all(10),
                 child: Container(
@@ -86,6 +92,7 @@ class _SystemState extends State<System> {
                   ),
                 ),
               ),
+              // Denominator Textfield
               Card(
                 margin: EdgeInsets.all(10),
                 child: Container(
@@ -107,20 +114,24 @@ class _SystemState extends State<System> {
                   ),
                 ),
               ),
+              // Space
               SizedBox(
                 height: 50,
               ),
+              // TF Component
               SystemTFComponent(
                 system: system,
               ),
+              // Space
               SizedBox(
                 height: 50,
               ),
+              // Functions
               !system.isProper
                   ? Container()
                   : GridView(
                       shrinkWrap: true,
-                      padding: EdgeInsets.only(bottom: 25),
+                      padding: EdgeInsets.only(bottom: 35),
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
@@ -128,6 +139,7 @@ class _SystemState extends State<System> {
                         crossAxisSpacing: 15,
                       ),
                       children: [
+                        // Step Info
                         RaisedButton(
                           child: Text(
                             "Step Info",
@@ -136,78 +148,126 @@ class _SystemState extends State<System> {
                           onPressed: () async {
                             try {
                               var res = await stepinfo(system);
-                              print(res);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(stepInfo: res),
+                              );
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Step Response
                         RaisedButton(
                           child: Text("Step Response"),
                           onPressed: () async {
                             try {
                               var res = await stepresponse(system);
-                              print(res);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(stepResponse: res),
+                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Analysis(
+                                      system: Provider.of<AppState>(context,
+                                              listen: false)
+                                          .system,
+                                      stepResponse: res,
+                                    ),
+                                  ));
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Ramp Response
                         RaisedButton(
                           child: Text("Ramp Response"),
                           onPressed: () async {
                             try {
                               var res = await rampresponse(system);
-                              print(res);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(rampResponse: res),
+                              );
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Impulse Response
                         RaisedButton(
                           child: Text("Impulse Response"),
                           onPressed: () async {
                             try {
                               var res = await impulseresponse(system);
-                              print(res);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(impulseResponse: res),
+                              );
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Bode Plot
                         RaisedButton(
-                          child: Text("BodePlot"),
+                          child: Text("Bode Plot"),
                           onPressed: () async {
                             try {
                               var res = await bodeplot(system);
-                              print(res);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(bodePlot: res),
+                              );
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Rootlocus
                         RaisedButton(
                           child: Text("RootLocus"),
                           onPressed: () async {
                             try {
                               var res = await rlocusplot(system);
-                              print(res.points.toString());
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(rlocusPlot: res),
+                              );
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                        child: Container(
+                                          height: 320,
+                                          child: PhotoView(
+                                            imageProvider: res.image,
+                                          ),
+                                        ),
+                                      ));
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Nyquist Plot
                         RaisedButton(
-                          child: Text("Nyquist"),
+                          child: Text("Nyquist Plot"),
                           onPressed: () async {
                             try {
                               var res = await nyquistplot(system);
-                              print(res.freq);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(nyquistPlot: res),
+                              );
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+                        // Poles Zeros
                         RaisedButton(
                           child: Text(
                             "Poles Zeros",
@@ -216,21 +276,26 @@ class _SystemState extends State<System> {
                           onPressed: () async {
                             try {
                               var res = await poleszeros(system);
-                              print(res.zeros.toString());
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(polesZeros: res),
+                              );
                             } catch (e) {
                               print(e);
                             }
                           },
                         ),
+
+                        // Closed Loop
                         RaisedButton(
                           child: Text("Closed Loop"),
                           onPressed: () async {
                             try {
                               var res = await closedloopUnitFeedback(system);
-                              print(res.numeratorCoeffs);
-                              print(res.denominatorCoeffs);
-                              print(res.numeratorText);
-                              print(res.denominatorText);
+                              Provider.of<AppState>(context, listen: false)
+                                  .setNewSystem(
+                                system.copyWith(closedLoop: res),
+                              );
                             } catch (e) {
                               print(e);
                             }

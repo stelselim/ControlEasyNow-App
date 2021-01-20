@@ -1,11 +1,10 @@
 import 'dart:convert';
-
-import 'package:controlapp/utility/makeSFunction.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:controlapp/classes/systemTF.dart';
+import 'package:controlapp/utility/makeSFunction.dart';
 
-Future<TFModel> closedloopUnitFeedback(TFModel tfModel) async {
+Future<ClosedLoop> closedloopUnitFeedback(TFModel tfModel) async {
   String numParams = tfModel.toNum;
   String denParams = tfModel.toDen;
   // print(numParams);
@@ -21,7 +20,7 @@ Future<TFModel> closedloopUnitFeedback(TFModel tfModel) async {
   if (jsonDecode(res.body)["Error"] != null)
     throw (jsonDecode(res.body)["Error"]);
 
-  TFModel clSystem = TFModel(
+  ClosedLoop clSystem = ClosedLoop(
     numeratorText:
         makeSfunctionWithCoeffs(jsonDecode(res.body)["systemNumerator"]),
     denominatorText:
@@ -31,4 +30,18 @@ Future<TFModel> closedloopUnitFeedback(TFModel tfModel) async {
         List<double>.from(jsonDecode(res.body)["systemDenominator"]),
   );
   return clSystem;
+}
+
+class ClosedLoop {
+  String numeratorText;
+  String denominatorText;
+
+  List<double> numeratorCoeffs = [];
+  List<double> denominatorCoeffs = [];
+  ClosedLoop({
+    @required this.numeratorText,
+    @required this.denominatorText,
+    @required this.numeratorCoeffs,
+    @required this.denominatorCoeffs,
+  });
 }

@@ -1,5 +1,7 @@
+import 'package:controlapp/provider/appstate.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   Home({
@@ -108,8 +110,17 @@ class _MyHomePageState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: LineChart(mainData()),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 120,
+          ),
+          Center(
+            child: LineChart(
+              mainData(),
+            ),
+          ),
+        ],
       ),
     );
   }

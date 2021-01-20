@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:http/http.dart' as http;
-
 import 'package:controlapp/classes/systemTF.dart';
 
 Future<PolesZeros> poleszeros(TFModel tfModel) async {
